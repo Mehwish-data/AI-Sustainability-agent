@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #4CAF50);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            width: 100%;
+        }
+
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .messages-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.bot {
+            text-align: left;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot .message-content {
+            background: #f8f9fa;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .input-area {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        #questionInput {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        #questionInput:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .welcome-message h3 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .example-questions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .example-question {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4CAF50;
+            font-size: 14px;
+            text-align: left;
+            position: relative;
+        }
+
+        .example-question:hover {
+            background: #e9f7ea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .back-button {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 15px auto;
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .back-button:hover {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #c62828;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .chat-container {
+                height: 75vh;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .example-questions {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .example-question {
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌱 Sustainability AI Assistant</h1>
+        <p>Your intelligent guide to sustainable living and environmental solutions</p>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="messages-area" id="messagesArea">
+                <div class="welcome-message">
+                    <h3>Welcome to your Sustainability Assistant!</h3>
+                    <p>I'm here to help you with questions about sustainable living, environmental practices, renewable energy, waste reduction, and eco-friendly solutions.</p>
+                    
+                    <div class="example-questions">
+                        <div class="example-question" onclick="askExample('How can I reduce my carbon footprint at home?')">
+                            💡 Reduce carbon footprint at home
+                        </div>
+                        <div class="example-question" onclick="askExample('What are the best renewable energy options for my area?')">
+                            ⚡ Renewable energy options
+                        </div>
+                        <div class="example-question" onclick="askExample('How do I start composting in a small apartment?')">
+                            🌿 Start composting in small space
+                        </div>
+                        <div class="example-question" onclick="askExample('What are some sustainable transportation alternatives?')">
+                            🚲 Sustainable transportation
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span style="margin-left: 10px;">Thinking about your sustainability question...</span>
+            </div>
+
+            <div class="input-area">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="questionInput" 
+                        placeholder="Ask me about sustainability, renewable energy, eco-friendly practices..."
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="btn btn-primary" onclick="askQuestion()" id="askBtn">
+                        <span>Ask</span>
+                        <span>🚀</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let messageHistory = [];
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                askQuestion();
+            }
+        }
+
+        function askExample(question) {
+            document.getElementById('questionInput').value = question;
+            askQuestion();
+        }
+
+        function addMessage(content, isUser = false) {
+            const messagesArea = document.getElementById('messagesArea');
+            
+            // Remove welcome message if it exists
+            const welcomeMessage = messagesArea.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.innerHTML = isUser ? content : formatResponse(content);
+            
+            messageDiv.appendChild(messageContent);
+            messagesArea.appendChild(messageDiv);
+            
+            // Add back button after bot response
+            if (!isUser) {
+                addBackButton();
+            }
+            
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function addBackButton() {
+            const messagesArea = document.getElementById('messagesArea');
+            
+            // Remove existing back button if present
+            const existingBackBtn = messagesArea.querySelector('.back-button');
+            if (existingBackBtn) {
+                existingBackBtn.remove();
+            }
+            
+            const backButton = document.createElement('button');
+            backButton.className = 'back-button';
+            backButton.innerHTML = '← Ask Another Question';
+            backButton.onclick = showWelcomeMessage;
+            
+            messagesArea.appendChild(backButton);
+        }
+
+        function showWelcomeMessage() {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = `
+                <div class="welcome-message">
+                    <h3>Welcome to your Sustainability Assistant!</h3>
+                    <p>I'm here to help you with questions about sustainable living, environmental practices, renewable energy, waste reduction, and eco-friendly solutions.</p>
+                    
+                    <div class="example-questions">
+                        <div class="example-question" onclick="askExample('How can I reduce my carbon footprint at home?')">
+                            💡 Reduce carbon footprint at home
+                        </div>
+                        <div class="example-question" onclick="askExample('What are the best renewable energy options for my area?')">
+                            ⚡ Renewable energy options
+                        </div>
+                        <div class="example-question" onclick="askExample('How do I start composting in a small apartment?')">
+                            🌿 Start composting in small space
+                        </div>
+                        <div class="example-question" onclick="askExample('What are some sustainable transportation alternatives?')">
+                            🚲 Sustainable transportation
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatResponse(text) {
+            // Basic formatting for better readability
+            return text
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/(\d+\.)/g, '<br><strong>$1</strong>');
+        }
+
+        function showError(message) {
+            const messagesArea = document.getElementById('messagesArea');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = `Error: ${message}`;
+            messagesArea.appendChild(errorDiv);
+            
+            // Add back button after error message
+            addBackButton();
+            
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function setLoading(isLoading) {
+            const loading = document.getElementById('loading');
+            const askBtn = document.getElementById('askBtn');
+            const input = document.getElementById('questionInput');
+            
+            if (isLoading) {
+                loading.style.display = 'block';
+                askBtn.disabled = true;
+                askBtn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px;"></div> <span>Thinking...</span>';
+                input.disabled = true;
+            } else {
+                loading.style.display = 'none';
+                askBtn.disabled = false;
+                askBtn.innerHTML = '<span>Ask</span> <span>🚀</span>';
+                input.disabled = false;
+            }
+        }
+
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) {
+                input.focus();
+                return;
+            }
+
+            // Add user message
+            addMessage(question, true);
+            input.value = '';
+            setLoading(true);
+
+            try {
+                const response = await fetch('http://localhost:5000/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Server error');
+                }
+
+                // Add bot response
+                addMessage(data.response || 'I apologize, but I couldn\'t generate a response to your question.');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'Failed to connect to the sustainability agent. Please make sure the server is running.');
+            } finally {
+                setLoading(false);
+                input.focus();
+            }
+        }
+
+        // Focus on input when page loads
+        window.addEventListener('load', () => {
+            document.getElementById('questionInput').focus();
+        });
+
+        // Add some fun interactions
+        document.getElementById('questionInput').addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.transform = 'scale(1.02)';
+            } else {
+                this.style.transform = 'scale(1)';
+            }
+        });
+
+        // Add typing indicator simulation
+        function simulateTyping(text, element, callback) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function typeChar() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeChar, Math.random() * 20 + 10);
+                } else {
+                    callback && callback();
+                }
+            }
+            
+            typeChar();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.env
+_pycache_/
+*.py[cod]
+chroma_db/
+.vscode/
+.idea/
