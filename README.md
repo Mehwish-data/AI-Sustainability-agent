@@ -27,17 +27,13 @@ An AI-powered voice-enabled assistant that helps estimate and reduce CO₂ emiss
 - 🌍 Climatiq API (CO₂ estimates)
 - 📦 dotenv (.env secrets handling)
 
----
 
 ## 📁 Directory Structure
 
-```
-
-├── main.py                      # Core agent logic
-├── sustainability\_docs/        # PDF files for RAG
-├── .env                        # API keys & config
-├── requirements.txt            # Python dependencies
-└── README.md                   # You're here!
+├── ai_sustainability_agent\_docs/ # PDF files for RAG
+├── .env                           # API keys & config
+├── requirements.txt               # Python dependencies
+└── README.md                      # You're here!
 
 
 
@@ -55,9 +51,8 @@ m venv venv
 source venv/bin/activate   # On Windows: venv\Scripts\activate
 ```
 
-### 3️⃣ Install Dependencies
 
-
+3️⃣ 𝐈𝐧𝐬𝐭𝐚𝐥𝐥 𝐃𝐞𝐩𝐞𝐧𝐝𝐞𝐧𝐜𝐢𝐞𝐬
 pip install -r requirements.txt
 ```
 
@@ -99,7 +94,7 @@ Example queries:
 
 * `speech_recognition` listens for your question.
 * `pyttsx3` reads out the final answer.
-* If you select text input, simply type your query.
+* If you select text input, type your query.
 
 ---
 
@@ -144,7 +139,7 @@ USE_OLLAMA=true
 ## 🧑‍💻 Author
 
 **Mehwish Umar**
-🚀 Data Science Explorer | 💚 Passionate about Climate Tech | 🔗 [LinkedIn](https://www.linkedin.com/in/yourprofile)
+ Data Science Explorer 
 
 
 ## 📝 License
