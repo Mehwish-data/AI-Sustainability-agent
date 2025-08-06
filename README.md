@@ -143,12 +143,8 @@ USE_OLLAMA=true
 ## 🧑‍💻 Author
 
 **Mehwish Umar**
+
  Data Science Explorer 
-
-
-## 📝 License
-
-This project is open-source and available under the [MIT License](LICENSE).
 
 
 
@@ -156,6 +152,5 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 1. Save this as `README.md` in your project root.
 2. Add a `requirements.txt` with your used libraries (if not already).
-3. (Optional) Add a `LICENSE` file (MIT recommended).
 
 
