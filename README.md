@@ -31,8 +31,11 @@ An AI-powered voice-enabled assistant that helps estimate and reduce CO₂ emiss
 ## 📁 Directory Structure
 
 ├── ai_sustainability_agent\_docs/ # PDF files for RAG
+
 ├── .env                           # API keys & config
+
 ├── requirements.txt               # Python dependencies
+
 └── README.md                      # You're here!
 
 
@@ -51,8 +54,9 @@ m venv venv
 source venv/bin/activate   # On Windows: venv\Scripts\activate
 ```
 
+3️⃣ Install Dependencies
+bash
 
-3️⃣ 𝐈𝐧𝐬𝐭𝐚𝐥𝐥 𝐃𝐞𝐩𝐞𝐧𝐝𝐞𝐧𝐜𝐢𝐞𝐬
 pip install -r requirements.txt
 ```
 
