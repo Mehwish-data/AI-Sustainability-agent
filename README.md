@@ -44,7 +44,7 @@ An AI-powered voice-enabled assistant that helps estimate and reduce CO₂ emiss
 
 ### 1️⃣ Clone the Repo
 
-git clone https://github.com/yourusername/AI-Sustainability-agent.git
+git clone https://github.com/Mehwish-data/AI-Sustainability-agent.git
 cd AI-Sustainability-agent
 
 ### 2️⃣ Create a Virtual Environment
